@@ -5,6 +5,8 @@ __author__ = "Varun Nayyar <nayyarv@gmail.com>"
 import numpy as np
 from uuid import uuid1
 
+LR = 1e-4
+
 
 class Layer:
     def __init__(self):
@@ -31,21 +33,26 @@ class FullyConnected(Layer):
 
     def backward(self, dldy, cachedict):
         x = cachedict[self.name]
-        dldw = dldy @ self.W.T
-        dldb = dldy
-        dldx = x.T @ dldy
+        dldw = x.T @ dldy
+        dldb = np.sum(dldy, axis=0)
+        dldx = dldy @ self.W.T
+
+        self.W -= dldw * LR
+        self.b -= dldb * LR
+
         return dldx
 
 
 class Tanh(Layer):
 
     def forward(self, x, cachedict):
-        cachedict[self.name] = np.tanh(x)
-        return np.tanh(x)
+        th = np.tanh(x)
+        cachedict[self.name] = th
+        return th
 
     def backward(self, dldy, cachedict):
         th = cachedict[self.name]
-        return (1 - th**2) * dldy
+        return (1 - th ** 2) * dldy
 
 
 class Network(Layer):

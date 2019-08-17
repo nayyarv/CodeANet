@@ -2,7 +2,7 @@
 #  -*- coding: utf-8 -*-
 __author__ = "Varun Nayyar <nayyarv@gmail.com>"
 
-
+import numpy as np
 
 
 class MSELoss:
@@ -10,4 +10,4 @@ class MSELoss:
         return np.mean((y - yhat)**2 / 2)
 
     def loss_gradient(self, y, yhat):
-        return np.mean(yhat - y)
+        return np.expand_dims(np.mean(yhat - y, axis=-1), axis=-1)

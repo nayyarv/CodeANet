@@ -17,8 +17,10 @@ def forward():
     def timeit_rowmajor():
         x @ w
 
-    wopp = np.random.randn(hiddendim, indim)
-    xopp = np.random.randn(indim, N)
+    wopp = w.T
+    # wopp = np.random.randn(hiddendim, indim)
+    xopp = x.T
+    # xopp = np.random.randn(indim, N)
 
     def timeit_colmajor():
         wopp @ xopp

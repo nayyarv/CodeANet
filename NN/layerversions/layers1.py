@@ -14,18 +14,26 @@ class Layer:
 
 
 class FullyConnected(Layer):
-    def __init__(self, indim, hiddendim):
-        self.W = np.random.randn(indim, hiddendim) * np.sqrt(1 / indim)
+    def __init__(self, indim, hiddendim, init="xavier"):
+        if init == "xavier":
+            scale = np.sqrt(2/(indim+hiddendim))
+        elif init == "he":
+            scale = np.sqrt(2/indim)
+        else:
+            raise ValueError(f"Unknown initialiser: {init}")
+        self.W = np.random.randn(indim, hiddendim) * scale
         self.b = np.zeros(hiddendim)
+
 
     def forward(self, x):
         y = x @ self.W + self.b
         return y
 
     def backward(self, dldy):
-        dldw = dldy @ self.W.T
-        dldb = dldy
-        dldx = x.T @ dldy
+        dldw = x.T @ dldy
+        dldb = np.sum(dldy, axis=0)
+        dldx = dldy @ self.W.T
+
         return dldx
 
 

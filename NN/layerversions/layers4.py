@@ -18,9 +18,6 @@ class Layer:
     def forward(self, x):
         pass
 
-    def forward_train(self, x):
-        pass
-
     def backward(self, dldy, cache, optimiser):
         pass
 
@@ -31,7 +28,7 @@ class Layer:
 class FullyConnected(Layer):
     def __init__(self, indim, hiddendim):
         super().__init__()
-        self.W = np.random.randn(indim, hiddendim) * np.sqrt(1 / indim)
+        self.W = np.random.randn(indim, hiddendim) * np.sqrt(2 / indim)
         self.b = np.zeros(hiddendim)
 
     def params(self):
@@ -39,10 +36,7 @@ class FullyConnected(Layer):
 
     def forward(self, x):
         y = x @ self.W + self.b
-        return y
-
-    def forward_train(self, x):
-        return self.forward(x), x
+        return y, x
 
     def backward(self, dldy, x, optimiser):
         dldw = x.T @ dldy
@@ -61,9 +55,6 @@ class Tanh(Layer):
         return ()
 
     def forward(self, x):
-        return np.tanh(x)
-
-    def forward_train(self, x):
         y = self.forward(x)
         return y, y
 
@@ -81,7 +72,7 @@ class Network(Layer):
 
     def forward(self, x):
         for l in self.network:
-            x = l.forward(x)
+            x, _ = l.forward(x)
         return x
 
     def forward_train(self, x):

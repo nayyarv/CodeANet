@@ -22,7 +22,7 @@ class Layer:
 class FullyConnected(Layer):
     def __init__(self, indim, hiddendim):
         super().__init__()
-        self.W = np.random.randn(indim, hiddendim) * np.sqrt(1 / indim)
+        self.W = np.random.randn(indim, hiddendim) * np.sqrt(2 / indim)
         self.b = np.zeros(hiddendim)
         self.name = uuid1()
 
